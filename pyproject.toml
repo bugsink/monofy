@@ -32,3 +32,7 @@ include = [
 ]
 
 exclude = []  # exclude packages matching these glob patterns (empty by default)
+
+[project.urls]
+"Homepage" = "https://github.com/bugsink/allinone"
+"Bug Reports" = "https://github.com/bugsink/allinone/issues"
