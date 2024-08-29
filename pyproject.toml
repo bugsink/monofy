@@ -20,6 +20,7 @@ classifiers = [
 dynamic = ["version"]
 
 [project.scripts]
+allinone = "allinone.scripts.all_in_one:main"
 all-in-one = "allinone.scripts.all_in_one:main"
 
 [tool.setuptools]

@@ -37,7 +37,7 @@ why this is a great idea](https://www.bugsink.com/multi-process-docker-images/)
 To use this script, clone the repository or install via your preferred method:
 
 ```
-pip install all-in-one
+pip install allinone
 ```
 
 ### Usage
@@ -75,7 +75,7 @@ Here’s how you might use this script in a Dockerfile:
 ```
 FROM [..]
 
-RUN pip install all-in-one
+RUN pip install allinone
 
 CMD ["all-in-one", "check-install", "--deploy", "&&", "web-server", "0.0.0.0:8000", "|||", "background-process", "-v"]
 ```
