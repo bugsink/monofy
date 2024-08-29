@@ -20,7 +20,7 @@ class ParentProcess:
         The script is written to be able to run multiple OS processes in a single Docker container. It may, however,
         be useful in other contexts as well, i.e. for [developer] ergonomics when running in a terminal.
         """
-        print("all-in-one starting with pid", os.getpid())
+        print("monofy starting with pid", os.getpid())
 
         self.pre_start()
 
@@ -45,7 +45,7 @@ class ParentProcess:
         # about signal-handling if you choose the other form.
 
         for args in self.get_pre_start_command_args(sys.argv):
-            print("all-in-one 'pre-start' process:", " ".join(args))
+            print("monofy 'pre-start' process:", " ".join(args))
             proc = subprocess.run(args)
             if proc.returncode != 0:
                 sys.exit(proc.returncode)
@@ -57,11 +57,11 @@ class ParentProcess:
                 child = subprocess.Popen(args)
             except Exception:
                 # Print is a bit superflous here, as the exception will be printed anyway by the raise
-                # print("all-in-one failed to start process:", " ".join(args), "(%s)" % e)
+                # print("monofy failed to start process:", " ".join(args), "(%s)" % e)
                 self.terminate_children()
                 raise
 
-            print("all-in-one started process %s:" % child.pid, " ".join(args))
+            print("monofy started process %s:" % child.pid, " ".join(args))
             self.children.append(child)
 
     def terminate_children(self, except_child=None):

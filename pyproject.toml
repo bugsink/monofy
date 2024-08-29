@@ -3,10 +3,10 @@ requires = ["setuptools>=64", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-version_file = "allinone/_version.py"
+version_file = "monofy/_version.py"
 
 [project]
-name = "allinone"
+name = "monofy"
 authors = [
     {name = "Bugsink B.V.", email = "info@bugsink.com"},
 ]
@@ -20,8 +20,7 @@ classifiers = [
 dynamic = ["version"]
 
 [project.scripts]
-allinone = "allinone.scripts.all_in_one:main"
-all-in-one = "allinone.scripts.all_in_one:main"
+monofy = "monofy.scripts.monofy:main"
 
 [tool.setuptools]
 include-package-data = true  # this is the default, but explicit is better than implicit
@@ -29,11 +28,11 @@ include-package-data = true  # this is the default, but explicit is better than 
 [tool.setuptools.packages.find]
 where = ["."]
 include = [
-    "allinone*",
+    "monofy*",
 ]
 
 exclude = []  # exclude packages matching these glob patterns (empty by default)
 
 [project.urls]
-"Homepage" = "https://github.com/bugsink/allinone"
-"Bug Reports" = "https://github.com/bugsink/allinone/issues"
+"Homepage" = "https://github.com/bugsink/monofy"
+"Bug Reports" = "https://github.com/bugsink/monofy/issues"

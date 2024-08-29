@@ -1,9 +1,9 @@
 import unittest
 
-from allinone.scripts.all_in_one import ParentProcess
+from monofy.scripts.monofy import ParentProcess
 
 
-class AllInOneTestCase(unittest.TestCase):
+class MonofyTestCase(unittest.TestCase):
 
     def test_arg_parsing(self):
         def _check(argv, expected_pre_start, expected_parallel):
@@ -15,43 +15,43 @@ class AllInOneTestCase(unittest.TestCase):
         _check(
             # this cannot really happen in practice, because we guard for "we need some args". Regardless, we keep the
             # test here to show what the parser would do (even if that's a bit weird, i.e. calling a single non-command)
-            ["all_in_one.py"],
+            ["monofy.py"],
             [],
             [[]],
         )
 
         _check(
-            ["all_in_one.py", "a", "b"],
+            ["monofy.py", "a", "b"],
             [],
             [["a", "b"]],
         )
 
         _check(
-            ["all_in_one.py", "a", "b", "|||", "c", "d", "|||", "e", "f"],
+            ["monofy.py", "a", "b", "|||", "c", "d", "|||", "e", "f"],
             [],
             [["a", "b"], ["c", "d"], ["e", "f"]],
         )
 
         _check(
-            ["all_in_one.py", "a", "b", "&&", "c", "d", "|||", "e", "f"],
+            ["monofy.py", "a", "b", "&&", "c", "d", "|||", "e", "f"],
             [["a", "b"]],
             [["c", "d"], ["e", "f"]],
         )
 
         _check(
-            ["all_in_one.py", "a", "b", "|||", "c", "d", "|||", "e", "f"],
+            ["monofy.py", "a", "b", "|||", "c", "d", "|||", "e", "f"],
             [],
             [["a", "b"], ["c", "d"], ["e", "f"]],
         )
 
         _check(
-            ["all_in_one.py", "a", "b", "&&", "c", "d", "&&", "e", "f"],
+            ["monofy.py", "a", "b", "&&", "c", "d", "&&", "e", "f"],
             [["a", "b"], ["c", "d"]],
             [["e", "f"]],
         )
 
         _check(
-            ["all_in_one.py", "a", "b", "&&", "c", "d", "&&", "e", "f", "|||", "g", "h", "|||", "i", "j"],
+            ["monofy.py", "a", "b", "&&", "c", "d", "&&", "e", "f", "|||", "g", "h", "|||", "i", "j"],
             [["a", "b"], ["c", "d"]],
             [["e", "f"], ["g", "h"], ["i", "j"]],
         )

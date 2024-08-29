@@ -1,4 +1,4 @@
-# All-in-One Process Manager for Docker Containers
+# Monofy: Process Manager for Docker Containers
 
 This Python script is designed to manage multiple processes within a single Docker
 container, ensuring they are started, monitored, and terminated together.
@@ -37,7 +37,7 @@ why this is a great idea](https://www.bugsink.com/multi-process-docker-images/)
 To use this script, clone the repository or install via your preferred method:
 
 ```
-pip install allinone
+pip install monofy
 ```
 
 ### Usage
@@ -45,7 +45,7 @@ pip install allinone
 You can use this script to start and manage multiple processes in a Docker container.
 
 The commands for the processes and their own arguments should be passed as arguments 
-should be passed as arguments to `all-in-one`, separated by the literal string `|||`.
+should be passed as arguments to `monofy`, separated by the literal string `|||`.
 
 You can also provide "pre commands", one or more commands to run before the parallel
 processes are started, usually to perform setup tasks like checking the environment.
@@ -56,16 +56,16 @@ Such pre-commands should be separated by `&&`.
 Launch two commands in parallel, with connected fates (death of one kills the other):
 
 ```
-all-in-one child-command-1 --param-for-2 '|||' child-command-2 --param-for-2
+monofy child-command-1 --param-for-2 '|||' child-command-2 --param-for-2
 ```
 
 (Note the single quotes around the operators, which ensure they are not parsed by
-your shell, but are instead passed on to `all-in-one`)
+your shell, but are instead passed on to `monofy`)
 
 Launch some "pre commands" before launching two commands in parallel:
 
 ```
-all-in-one pre-command-1 --foo=bar '&&' child-command-1 param-for-that '|||' child-command-2 -v
+monofy pre-command-1 --foo=bar '&&' child-command-1 param-for-that '|||' child-command-2 -v
 ```
 
 ### Example Dockerfile
@@ -75,9 +75,9 @@ Here’s how you might use this script in a Dockerfile:
 ```
 FROM [..]
 
-RUN pip install allinone
+RUN pip install monofy
 
-CMD ["all-in-one", "check-install", "--deploy", "&&", "web-server", "0.0.0.0:8000", "|||", "background-process", "-v"]
+CMD ["monofy", "check-install", "--deploy", "&&", "web-server", "0.0.0.0:8000", "|||", "background-process", "-v"]
 ```
 
 ### Usage outside Docker
