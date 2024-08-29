@@ -1,0 +1,20 @@
+# Python
+*.pyc
+__pycache__
+
+# Virtual Environments / build
+/.env
+/.venv
+/bin/
+/include/
+/lib/
+/lib64
+/pyvenv.cfg
+/share/
+/*.egg-info/
+/*/_version.py
+/dist/
+
+# vim
+*.swo
+*.swp
