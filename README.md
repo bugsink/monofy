@@ -1,4 +1,4 @@
-# Monofy: Process Manager for Docker Containers
+# Monofy: Multiple Processes in a Single Docker Container
 
 This Python script is designed to manage multiple processes within a single Docker
 container, ensuring they are started, monitored, and terminated together.
