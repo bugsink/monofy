@@ -127,6 +127,9 @@ class ParentProcess:
 
 
 def main():
+    if len(sys.argv) <= 1 or sys.argv[1] in ("-h", "--help"):
+        print("Usage: %s command-1 [args...] '&&' command-2 [args...] '|||' command-3 [args...]" % sys.argv[0])
+        sys.exit(1)
     ParentProcess()
 
 
