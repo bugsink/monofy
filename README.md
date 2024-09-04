@@ -80,6 +80,12 @@ RUN pip install monofy
 CMD ["monofy", "check-install", "--deploy", "&&", "web-server", "0.0.0.0:8000", "|||", "background-process", "-v"]
 ```
 
+It's possible to pass-in a different combination of commands to start on the invocation of `docker run`:
+
+```
+docker run -it my-image monofy check-install --deploy '&&' web-server 0.0.0.0:1234 '|||' background-process -vvvv
+```
+
 ### Usage outside Docker
 
 This package was written with (the limitations of) Docker in mind, but it can also be
@@ -87,3 +93,16 @@ used in other contexts. One thing I found useful is to use it to start multiple
 development-related processes in a single line. The property that the death of one
 process takes down the others is very useful in reducing confusion if only a part of
 your set of tools goes down. 
+
+### Alternatives
+
+Use a process manager, like:
+
+* [supervisord](https://docs.docker.com/engine/containers/multi-service_container/#use-a-process-manager). 
+* [honcho](https://honcho.readthedocs.io/en/latest/)
+* [Chaperone](http://chaperone.io/)
+* [s6](http://skarnet.org/software/s6/overview.html)
+
+However, these tools are often more complex and require additional configuration. They also come with the subtle
+drawback that it is not possible to change the command to execute when running `docker run` (because they read config
+files to determine which commands to start, rather than taking that info from the command-line).
