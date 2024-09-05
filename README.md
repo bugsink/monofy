@@ -1,10 +1,20 @@
-# Monofy: Multiple Processes in a Single Docker Container
+# Monofy: Multi-Process Docker Containers
 
 This Python script is designed to manage multiple processes within a single Docker
 container, ensuring they are started, monitored, and terminated together.
 
 This approach is useful when the processes are tightly integrated and need to operate
 in unison.
+
+### TL;DR
+
+In your Docker file, include:
+
+```
+RUN pip install monofy
+
+CMD ["monofy", "child-command-1", "--param-for-1", "|||", "child-command-2", "--param-for-2"]
+```
 
 ### Features
 
