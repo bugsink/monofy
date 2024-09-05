@@ -16,6 +16,16 @@ RUN pip install monofy
 CMD ["monofy", "child-command-1", "--param-for-1", "|||", "child-command-2", "--param-for-2"]
 ```
 
+### Rationale
+
+Running multiple processes in a single Docker container is often discouraged.
+However, when processes are closely connected and need to work together, this
+approach can simplify deployment and maintenance.
+
+This script provides a Python-based solution to manage such processes efficiently
+within a single container, without adding unnecessary complexity. [Read more about
+why this is a great idea](https://www.bugsink.com/multi-process-docker-images/)
+
 ### Features
 
 * **Unified Process Management**: Starts and manages multiple processes as children
@@ -31,16 +41,6 @@ CMD ["monofy", "child-command-1", "--param-for-1", "|||", "child-command-2", "--
 
 * **Graceful Shutdown**: Ensure the parent process waits for all children to exit
   before shutting down.
-
-### Rationale
-
-Running multiple processes in a single Docker container is often discouraged.
-However, when processes are closely connected and need to work together, this
-approach can simplify deployment and maintenance.
-
-This script provides a Python-based solution to manage such processes efficiently
-within a single container, without adding unnecessary complexity. [Read more about
-why this is a great idea](https://www.bugsink.com/multi-process-docker-images/)
 
 ### Installation
 
