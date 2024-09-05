@@ -56,7 +56,7 @@ Such pre-commands should be separated by `&&`.
 Launch two commands in parallel, with connected fates (death of one kills the other):
 
 ```
-monofy child-command-1 --param-for-2 '|||' child-command-2 --param-for-2
+monofy child-command-1 --param-for-1 '|||' child-command-2 --param-for-2
 ```
 
 (Note the single quotes around the operators, which ensure they are not parsed by
