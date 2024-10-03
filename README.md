@@ -42,6 +42,9 @@ why this is a great idea](https://www.bugsink.com/multi-process-docker-images/)
 * **Graceful Shutdown**: Ensure the parent process waits for all children to exit
   before shutting down.
 
+* **Variable Substition**: Substitute variables from the command line because [Docker
+  can't be bothered to do so itself](https://github.com/moby/moby/issues/5509)
+
 ### Installation
 
 To use this script, clone the repository or install via your preferred method:

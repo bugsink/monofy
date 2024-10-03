@@ -4,6 +4,10 @@ import signal
 import sys
 import os
 from time import sleep
+import re
+
+# match both ${VAR} and $VAR:
+MATCH_ENV_VAR = re.compile(r'\$\{([A-Za-z_][A-Za-z0-9_]*)\}|\$([A-Za-z_][A-Za-z0-9_]*)')
 
 
 class ParentProcess:
@@ -82,7 +86,18 @@ class ParentProcess:
                     self.terminate_children(except_child=child)
 
     @classmethod
-    def get_pre_start_command_args(self, argv):
+    def substitute_env_vars(cls, arg):
+        # I don't _want_ to do this, but Docker doesn't want to do it either, so here we are.
+        #
+        # One (the only) other way to do this is to have CMD invoke a shell; but that has drawbacks too (e.g.  signal
+        # forwarding). Since monofy is already the "extra layer" we add to the system, we might as well solve the
+        # problems here.
+        #
+        # https://github.com/moby/moby/issues/5509
+        return MATCH_ENV_VAR.sub(lambda m: os.environ.get(m.group(1) or m.group(2), ""), arg)
+
+    @classmethod
+    def get_pre_start_command_args(cls, argv):
         """Splits our own arguments into a list of args for each of the pre-start commands, we split on "&&"."""
 
         # We don't want to pass the first argument, as that is the script name
@@ -97,12 +112,12 @@ class ParentProcess:
                 result.append(this)
                 this = []
             else:
-                this.append(arg)
+                this.append(cls.substitute_env_vars(arg))
 
         return result
 
     @classmethod
-    def get_parallel_command_args(self, argv):
+    def get_parallel_command_args(cls, argv):
         """Splits our own arguments into a list of args for each of the children each, we split on "|||"."""
 
         # We don't want to pass the first argument, as that is the script name
@@ -116,7 +131,7 @@ class ParentProcess:
             if arg == "|||":
                 result.append([])
             else:
-                result[-1].append(arg)
+                result[-1].append(cls.substitute_env_vars(arg))
 
         return result
 

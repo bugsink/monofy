@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from monofy.scripts.monofy import ParentProcess
@@ -27,9 +28,21 @@ class MonofyTestCase(unittest.TestCase):
         )
 
         _check(
+            ["monofy.py", "a", "|||", "b", "|||", "c"],
+            [],
+            [["a"], ["b"], ["c"]],
+        )
+
+        _check(
             ["monofy.py", "a", "b", "|||", "c", "d", "|||", "e", "f"],
             [],
             [["a", "b"], ["c", "d"], ["e", "f"]],
+        )
+
+        _check(
+            ["monofy.py", "a", "&&", "b", "|||", "c"],
+            [["a"]],
+            [["b"], ["c"]],
         )
 
         _check(
@@ -55,6 +68,24 @@ class MonofyTestCase(unittest.TestCase):
             [["a", "b"], ["c", "d"]],
             [["e", "f"], ["g", "h"], ["i", "j"]],
         )
+
+        _check(
+            ["monofy.py", "$USER", "&&", "$USER", "|||", "$USER"],
+            [[os.environ["USER"]]],
+            [[os.environ["USER"]], [os.environ["USER"]]],
+        )
+
+    def test_substitute_env_vars(self):
+        # test-the-test: we need a non-empty USER to be able to test against
+        self.assertTrue(os.environ.get("USER"))
+
+        self.assertEqual("donttouchme", ParentProcess.substitute_env_vars("donttouchme"))
+        self.assertEqual("", ParentProcess.substitute_env_vars(""))
+        self.assertEqual("foo %s" % os.environ["USER"], ParentProcess.substitute_env_vars("foo $USER"))
+        self.assertEqual("bar %s foo" % os.environ["USER"], ParentProcess.substitute_env_vars("bar ${USER} foo"))
+        self.assertEqual("", ParentProcess.substitute_env_vars("$THISWILLNOTEXIST"))
+        self.assertEqual(
+            "%s %s" % (os.environ["USER"], os.environ["USER"]), ParentProcess.substitute_env_vars("$USER $USER"))
 
 
 if __name__ == '__main__':
