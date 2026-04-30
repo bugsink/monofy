@@ -1,4 +1,6 @@
 import os
+import subprocess
+import sys
 import unittest
 from unittest import mock
 
@@ -86,6 +88,28 @@ class MonofyTestCase(unittest.TestCase):
             self.assertEqual("", ParentProcess.substitute_env_vars("$THISWILLNOTEXIST"))
             self.assertEqual(
                 "%s %s" % (os.environ["USER"], os.environ["USER"]), ParentProcess.substitute_env_vars("$USER $USER"))
+
+    def test_connected_fates(self):
+        proc = subprocess.run(
+            [
+                sys.executable,  # i.e. "python"
+                "-m",
+                "monofy.scripts.monofy",
+                sys.executable,
+                "-c",
+                "import time; time.sleep(0.1)",
+                "|||",
+                sys.executable,
+                "-c",
+                # print 'got-sigterm' and exit with code 0 when receiving SIGTERM
+                "import signal, sys, time; signal.signal(signal.SIGTERM, lambda *_: (print('got-sigterm', flush=True), sys.exit(0))); time.sleep(10)",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+
+        self.assertIn("got-sigterm", proc.stdout)
 
 
 if __name__ == '__main__':
