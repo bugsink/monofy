@@ -3,7 +3,6 @@ import subprocess
 import signal
 import sys
 import os
-from time import sleep
 import re
 
 # match both ${VAR} and $VAR:
@@ -28,7 +27,7 @@ class ParentProcess:
 
         self.pre_start()
 
-        self.children = []
+        self.children = {}
 
         # I think Docker will send a SIGTERM to the main process when it wants to stop the container; SIGINT is for
         # interactive use and is also supported. SIGKILL is not handle-able, so we can't do anything about that.
@@ -39,7 +38,7 @@ class ParentProcess:
             self.start_children()
             self.connect_childrens_fates()
         finally:
-            for child in self.children:
+            for child in self.children.values():
                 child.wait()
 
     def pre_start(self):
@@ -66,24 +65,16 @@ class ParentProcess:
                 raise
 
             print("monofy started process %s:" % child.pid, " ".join(args))
-            self.children.append(child)
+            self.children[child.pid] = child
 
     def terminate_children(self, except_child=None):
-        for child in self.children:
+        for child in self.children.values():
             if child != except_child:
                 child.send_signal(signal.SIGTERM)
 
     def connect_childrens_fates(self):
-        # Check if any of the children have exited
-        children_are_alive = True
-        while children_are_alive:
-            sleep(.05)  # Sleep in the busy loop to avoid 100% CPU usage
-
-            for child in self.children:
-                if child.poll() is not None:
-                    # One of the children has exited
-                    children_are_alive = False
-                    self.terminate_children(except_child=child)
+        pid, _status = os.waitpid(-1, 0)  # wait for any child process to exit
+        self.terminate_children(except_child=self.children[pid])
 
     @classmethod
     def substitute_env_vars(cls, arg):
@@ -136,8 +127,11 @@ class ParentProcess:
         return result
 
     def signal_handler(self, signum, frame):
+        # we just forward the signal to the children; they should (presumably) handle it in a way that causes them to
+        # exit, which will cause us to send a signal to the other child and then exit ourselves.
+        #
         # we resist the urge to print here, as this is discouraged in signal handlers
-        for child in self.children:
+        for child in self.children.values():
             child.send_signal(signum)
 
 
